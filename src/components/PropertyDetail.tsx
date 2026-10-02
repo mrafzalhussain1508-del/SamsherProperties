@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Property } from '@/types/property';
+import { useWishlist } from '@/context/WishlistContext';
 import { 
   formatIndianCurrency, 
   formatSqFt, 
@@ -52,6 +53,9 @@ export default function PropertyDetail({
   property,
   onBack,
 }: PropertyDetailProps) {
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const wishlisted = isWishlisted(property.id);
+
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -124,10 +128,17 @@ export default function PropertyDetail({
               <Share2 className="w-4 h-4" />
             </button>
             <button
-              className="w-9 h-9 rounded-xl bg-[#f0f5ee] hover:bg-rose-50 text-[#163a34] hover:text-rose-500 flex items-center justify-center transition-colors cursor-pointer"
-              title="Save property"
+              type="button"
+              onClick={() => toggleWishlist(property)}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer active:scale-90 ${
+                wishlisted
+                  ? 'bg-rose-50 text-rose-500 ring-1 ring-rose-200'
+                  : 'bg-[#f0f5ee] hover:bg-rose-50 text-[#163a34] hover:text-rose-500'
+              }`}
+              title={wishlisted ? 'Remove from saved residences' : 'Save to wishlist'}
+              aria-label={wishlisted ? 'Remove from saved residences' : 'Save to wishlist'}
             >
-              <Heart className="w-4 h-4 stroke-[1.8]" />
+              <Heart className={`w-4 h-4 transition-transform duration-200 stroke-[1.8] ${wishlisted ? 'fill-rose-500 text-rose-500 scale-110' : ''}`} />
             </button>
           </div>
         </div>

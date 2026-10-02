@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { UserRole } from '@/types/property';
 import BrandLogo from '@/components/BrandLogo';
 import { useAuth } from '@/context/AuthContext';
+import { useWishlist } from '@/context/WishlistContext';
 import { 
   X, 
   Upload, 
@@ -13,7 +14,8 @@ import {
   LayoutDashboard, 
   ShieldCheck, 
   User, 
-  Lock 
+  Lock,
+  Heart 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -36,6 +38,7 @@ export default function Navbar({
 }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, role, isAuthenticated, openLoginModal, openRegisterModal, logout } = useAuth();
+  const { wishlistCount, openWishlist } = useWishlist();
 
   const handleLogout = () => {
     logout();
@@ -93,6 +96,22 @@ export default function Navbar({
               className="text-xs lg:text-sm font-semibold text-[#163a34] hover:text-[#b47a3c] transition-colors cursor-pointer"
             >
               Private Consultation
+            </button>
+
+            {/* Wishlist Saved Residences Button */}
+            <button
+              type="button"
+              onClick={openWishlist}
+              className="inline-flex items-center gap-1.5 text-xs lg:text-sm font-semibold text-[#163a34] hover:text-[#b47a3c] transition-colors cursor-pointer relative py-1 px-2.5 rounded-xl hover:bg-[#eef3ed]"
+              title="Saved Residences Shortlist"
+            >
+              <Heart className={`w-4 h-4 transition-transform duration-200 ${wishlistCount > 0 ? 'text-rose-500 fill-rose-500 scale-110' : 'text-[#567366]'}`} />
+              <span>Wishlist</span>
+              {wishlistCount > 0 && (
+                <span className="bg-rose-500 text-white text-[10px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center shadow-xs">
+                  {wishlistCount}
+                </span>
+              )}
             </button>
 
             {/* YouTube Official Channel Link */}
@@ -214,7 +233,23 @@ export default function Navbar({
           </nav>
 
           {/* Mobile Action: Hamburger Menu Toggle Button (Visible below 768px) */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-1.5">
+            {/* Mobile Wishlist Icon Button */}
+            <button
+              type="button"
+              onClick={openWishlist}
+              className="relative w-9 h-9 flex items-center justify-center text-[#163a34] hover:bg-[#f0f4ef] rounded-xl transition-colors cursor-pointer"
+              title="Saved Residences"
+              aria-label="View Saved Residences"
+            >
+              <Heart className={`w-5 h-5 transition-transform ${wishlistCount > 0 ? 'text-rose-500 fill-rose-500 scale-105' : 'text-[#163a34]'}`} />
+              {wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 bg-rose-500 text-white text-[9px] font-bold min-w-3.5 h-3.5 px-0.5 rounded-full flex items-center justify-center shadow-xs">
+                  {wishlistCount}
+                </span>
+              )}
+            </button>
+
             {!isAuthenticated && (
               <button
                 onClick={openLoginModal}
@@ -262,6 +297,22 @@ export default function Navbar({
               <span>Explore Curated Properties</span>
               <span className="text-xs bg-[#eef3ed] text-[#1a4332] font-semibold px-2 py-0.5 rounded-full">
                 Verified
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                openWishlist();
+              }}
+              className="w-full text-left font-serif text-base text-[#163a34] hover:text-[#b47a3c] py-2 flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Heart className={`w-4 h-4 ${wishlistCount > 0 ? 'text-rose-500 fill-rose-500' : 'text-[#567366]'}`} />
+                <span>Saved Residences (Wishlist)</span>
+              </div>
+              <span className="text-xs bg-rose-50 text-rose-700 font-bold px-2 py-0.5 rounded-full border border-rose-100">
+                {wishlistCount}
               </span>
             </button>
             <button

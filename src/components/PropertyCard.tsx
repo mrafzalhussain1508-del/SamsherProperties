@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Property } from '@/types/property';
+import { useWishlist } from '@/context/WishlistContext';
 import { formatIndianCurrency, formatSqFt } from '@/utils/formatters';
 import { 
   ShieldCheck, 
@@ -25,6 +26,9 @@ export default function PropertyCard({
   property,
   onSelectProperty,
 }: PropertyCardProps) {
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const wishlisted = isWishlisted(property.id);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -107,11 +111,17 @@ export default function PropertyCard({
         type="button"
         onClick={(e) => {
           e.stopPropagation();
+          toggleWishlist(property);
         }}
-        className="w-8 h-8 rounded-full bg-white/95 hover:bg-white text-[#567366] hover:text-[#b47a3c] backdrop-blur-md transition-colors shadow-2xs flex items-center justify-center pointer-events-auto cursor-pointer"
-        aria-label="Save to favorites"
+        className={`w-8 h-8 rounded-full backdrop-blur-md transition-all duration-200 shadow-2xs flex items-center justify-center pointer-events-auto cursor-pointer active:scale-90 ${
+          wishlisted
+            ? 'bg-rose-50 text-rose-500 hover:bg-rose-100 ring-1 ring-rose-200'
+            : 'bg-white/95 hover:bg-white text-[#567366] hover:text-rose-500'
+        }`}
+        aria-label={wishlisted ? 'Remove from saved residences' : 'Save to wishlist'}
+        title={wishlisted ? 'Remove from saved residences' : 'Save to wishlist'}
       >
-        <Heart className="w-4 h-4 stroke-[1.8]" />
+        <Heart className={`w-4 h-4 transition-transform duration-200 stroke-[1.8] ${wishlisted ? 'fill-rose-500 text-rose-500 scale-110' : ''}`} />
       </button>
     </div>
   );
