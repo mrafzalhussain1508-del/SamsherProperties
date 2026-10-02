@@ -161,6 +161,8 @@ export default function SearchHero({
             }}
             className="w-full h-full relative"
           >
+            {/* High-resolution hero interior image with unoptimized={true} and quality={100} to bypass Vercel compression */}
+            {/* Note: The "Replace Image" overlay button has been completely removed for public/production views */}
             <Image
               src={heroImageSrc}
               alt="Luxury home interior"
