@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Property, LeadEnquiry, UserRole } from '@/types/property';
 import { INITIAL_PROPERTIES, INITIAL_LEADS } from '@/data/mockProperties';
 import Navbar from '@/components/Navbar';
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
+  const router = useRouter();
   const { user, role, isAuthenticated, openLoginModal } = useAuth();
 
   // State Management
@@ -147,16 +149,13 @@ export default function Home() {
   }, [properties]);
 
   const handleSelectProperty = (prop: Property) => {
-    setSelectedProperty(prop);
-    if (typeof window !== 'undefined') {
-      window.history.pushState({ slug: prop.slug }, '', `/property/${prop.slug}`);
-    }
+    router.push(`/property/${prop.slug}`);
   };
 
   const handleBackToHome = () => {
     setSelectedProperty(null);
     if (typeof window !== 'undefined' && window.location.pathname.startsWith('/property/')) {
-      window.history.pushState(null, '', '/');
+      router.replace('/');
     }
   };
 

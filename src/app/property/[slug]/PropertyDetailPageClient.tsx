@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Property, LeadEnquiry } from '@/types/property';
 import Navbar from '@/components/Navbar';
@@ -27,6 +27,18 @@ export default function PropertyDetailPageClient({ property }: PropertyDetailPag
   const jsonLd = generatePropertyJsonLd(property);
   const canonicalUrl = getPropertyCanonicalUrl(property.slug);
 
+  // Canonical slug redirect history fix:
+  // If the page was loaded with an unformatted slug, property ID, or non-canonical casing,
+  // use router.replace() instead of router.push() to prevent adding an extra intermediate step to history.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const canonicalPath = `/property/${property.slug}`;
+      if (window.location.pathname !== canonicalPath) {
+        router.replace(canonicalPath);
+      }
+    }
+  }, [property.slug, router]);
+
   const handleOpenEnquiry = (prop?: Property | null) => {
     setModalProperty(prop || property);
     setIsModalOpen(true);
@@ -43,6 +55,14 @@ export default function PropertyDetailPageClient({ property }: PropertyDetailPag
   }) => {
     // Lead successfully submitted
     setIsModalOpen(false);
+  };
+
+  const handleBack = () => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+    } else {
+      router.replace('/');
+    }
   };
 
   return (
@@ -71,7 +91,7 @@ export default function PropertyDetailPageClient({ property }: PropertyDetailPag
       <main className="flex-1">
         <PropertyDetail
           property={property}
-          onBack={() => router.push('/')}
+          onBack={handleBack}
           onOpenEnquiry={handleOpenEnquiry}
         />
       </main>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Property } from '@/types/property';
 import { formatIndianCurrency, formatSqFt } from '@/utils/formatters';
 import { 
@@ -16,8 +17,8 @@ import {
 
 interface PropertyCardProps {
   property: Property;
-  onSelectProperty: (property: Property) => void;
-  onOpenEnquiry: (property: Property) => void;
+  onSelectProperty?: (property: Property) => void;
+  onOpenEnquiry?: (property: Property) => void;
 }
 
 export default function PropertyCard({
@@ -115,21 +116,33 @@ export default function PropertyCard({
     </div>
   );
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent triggering card-level handler if clicking on interactive elements
+    if ((e.target as HTMLElement).closest('a, button')) {
+      return;
+    }
+    if (onSelectProperty) {
+      onSelectProperty(property);
+    }
+  };
+
   return (
     <div 
-      onClick={() => onSelectProperty(property)}
+      onClick={handleCardClick}
       className="bg-white rounded-3xl overflow-hidden border border-[#e3ebe2] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col cursor-pointer group"
     >
       {/* Property Image Container */}
       {!hasMultipleImages ? (
         /* 1. Single static image */
         <div className="relative aspect-[16/10] overflow-hidden bg-[#e8eee7]">
-          <img
-            src={imageList[0]}
-            alt={property.title}
-            loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
-          />
+          <Link href={`/property/${property.slug}`} className="block w-full h-full">
+            <img
+              src={imageList[0]}
+              alt={property.title}
+              loading="lazy"
+              className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+            />
+          </Link>
           {renderFloatingBadges()}
         </div>
       ) : (
@@ -148,12 +161,14 @@ export default function PropertyCard({
           >
             {imageList.map((imgUrl, idx) => (
               <div key={idx} className="w-full h-full shrink-0 relative">
-                <img
-                  src={imgUrl}
-                  alt={`${property.title} - photo ${idx + 1}`}
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 select-none"
-                />
+                <Link href={`/property/${property.slug}`} className="block w-full h-full">
+                  <img
+                    src={imgUrl}
+                    alt={`${property.title} - photo ${idx + 1}`}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 select-none"
+                  />
+                </Link>
               </div>
             ))}
           </div>
@@ -210,15 +225,12 @@ export default function PropertyCard({
 
           {/* Title in Editorial Serif */}
           <h2 className="text-lg font-serif font-bold text-[#163a34] tracking-tight group-hover:text-[#b47a3c] transition-colors line-clamp-1">
-            <a
+            <Link
               href={`/property/${property.slug}`}
-              onClick={(e) => {
-                e.preventDefault();
-                onSelectProperty(property);
-              }}
+              className="hover:text-[#b47a3c] transition-colors"
             >
               {property.title}
-            </a>
+            </Link>
           </h2>
 
           {/* Location */}
@@ -264,18 +276,14 @@ export default function PropertyCard({
           </div>
         </div>
 
-        {/* View Details & Enquire Button (Matches Screenshot 1 & 4) */}
-        <a
+        {/* View Details & Enquire Button */}
+        <Link
           href={`/property/${property.slug}`}
-          onClick={(e) => {
-            e.preventDefault();
-            onSelectProperty(property);
-          }}
           className="w-full bg-white hover:bg-[#f4f7f3] text-[#1a4332] font-semibold py-3 px-4 rounded-xl text-xs sm:text-sm border border-[#cbe0d4] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs group-hover:border-[#1a4332]"
         >
           <span>View details & enquire</span>
           <ArrowRight className="w-4 h-4 text-[#1a4332] group-hover:translate-x-0.5 transition-transform" />
-        </a>
+        </Link>
       </div>
     </div>
   );
