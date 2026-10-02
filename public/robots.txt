@@ -1,0 +1,18 @@
+# Robots.txt for Samsher Properties
+# https://samsherproperties.in
+
+User-agent: *
+Allow: /
+
+# Disallow administrative, dashboard, login, and internal api routes
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Disallow: /api
+Disallow: /api/
+
+# Host
+Host: https://samsherproperties.in
+
+# Sitemap
+Sitemap: https://samsherproperties.in/sitemap.xml
