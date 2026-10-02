@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { PropertyPurpose } from '@/types/property';
-import { Search, ChevronDown, Camera } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import { motion, type Variants } from 'framer-motion';
 
 export interface FilterState {
@@ -151,29 +152,26 @@ export default function SearchHero({
           transition={{ duration: 1.0, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm aspect-[16/10] sm:aspect-[16/9] bg-[#dbe5db] group border border-[#d6e2d4] w-full"
         >
-          <motion.img
-            src={heroImageSrc}
-            alt="Luxury home interior"
+          <motion.div
             initial={{ scale: 1.1, opacity: 0.8 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{
               duration: 1.8,
               ease: [0.16, 1, 0.3, 1], // Unhurried, luxurious ease-out curve
             }}
-            className="w-full h-full object-cover"
-          />
-
-          {/* Replace Image Button in Top Right */}
-          {onOpenBrandingModal && (
-            <button
-              onClick={onOpenBrandingModal}
-              className="absolute top-3.5 right-3.5 bg-black/60 hover:bg-black/80 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full shadow-md backdrop-blur-md flex items-center gap-1.5 transition-all opacity-85 hover:opacity-100 cursor-pointer border border-white/20 z-10"
-              title="Change or upload interior photo"
-            >
-              <Camera className="w-3.5 h-3.5 text-[#e6ca85]" />
-              <span>Replace Image</span>
-            </button>
-          )}
+            className="w-full h-full relative"
+          >
+            <Image
+              src={heroImageSrc}
+              alt="Luxury home interior"
+              fill
+              priority
+              quality={100}
+              unoptimized={true}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+              className="object-cover w-full h-full"
+            />
+          </motion.div>
         </motion.div>
 
         {/* 3. SEARCH & FILTER CARD (Stacks on mobile grid-cols-1, 2 on sm, 4 on lg) */}
