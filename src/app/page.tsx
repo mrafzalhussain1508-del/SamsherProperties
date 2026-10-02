@@ -45,7 +45,7 @@ export default function Home() {
       } else {
         setCustomLogoUrl('/images/samsher-logo.jpg');
       }
-      if (savedHero) {
+      if (savedHero && !savedHero.startsWith('data:image')) {
         setCustomHeroUrl(savedHero);
       } else {
         setCustomHeroUrl('/images/luxury-interior-cove.jpg');
