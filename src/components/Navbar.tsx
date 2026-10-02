@@ -60,23 +60,23 @@ export default function Navbar({
       </div>
 
       {/* 2. MAIN HEADER BAR */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-[#e5ebe3] transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      <div className="bg-white/95 backdrop-blur-md border-b border-[#e5ebe3] transition-all w-full">
+        <div className="w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Brand Logo & Name: Samsher Properties */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink">
             <button
               onClick={onNavigateHome}
-              className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-none"
+              className="flex items-center gap-2 sm:gap-2.5 text-left group cursor-pointer focus:outline-none min-w-0"
               title="Samsher Properties"
             >
-              <BrandLogo customLogoUrl={customLogoUrl} size={40} />
+              <BrandLogo customLogoUrl={customLogoUrl} size={36} className="sm:w-10 sm:h-10 shrink-0" />
 
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-[#163a34]">
+              <div className="flex items-baseline gap-1 sm:gap-1.5 truncate">
+                <span className="text-lg sm:text-xl md:text-2xl font-serif font-bold tracking-tight text-[#163a34]">
                   Samsher
                 </span>
-                <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-[#b47a3c]">
+                <span className="text-lg sm:text-xl md:text-2xl font-serif font-bold tracking-tight text-[#b47a3c]">
                   Properties
                 </span>
               </div>
@@ -233,41 +233,25 @@ export default function Navbar({
           </nav>
 
           {/* Mobile Action: Hamburger Menu Toggle Button (Visible below 768px) */}
-          <div className="flex md:hidden items-center gap-1.5">
-            {/* Mobile Wishlist Icon Button */}
-            <button
-              type="button"
-              onClick={openWishlist}
-              className="relative w-9 h-9 flex items-center justify-center text-[#163a34] hover:bg-[#f0f4ef] rounded-xl transition-colors cursor-pointer"
-              title="Saved Residences"
-              aria-label="View Saved Residences"
-            >
-              <Heart className={`w-5 h-5 transition-transform ${wishlistCount > 0 ? 'text-rose-500 fill-rose-500 scale-105' : 'text-[#163a34]'}`} />
-              {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 bg-rose-500 text-white text-[9px] font-bold min-w-3.5 h-3.5 px-0.5 rounded-full flex items-center justify-center shadow-xs">
-                  {wishlistCount}
-                </span>
-              )}
-            </button>
-
+          <div className="flex md:hidden items-center gap-1.5 sm:gap-2 shrink-0">
             {!isAuthenticated && (
               <button
                 onClick={openLoginModal}
-                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1a4332] bg-[#eef3ed] px-2.5 py-1.5 rounded-lg border border-[#d6e3d5]"
+                className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-[#1a4332] bg-[#eef3ed] hover:bg-[#e3ede1] px-2.5 py-1.5 rounded-lg border border-[#d6e3d5] transition-colors whitespace-nowrap"
               >
-                <KeyRound className="w-3 h-3 text-[#b47a3c]" />
+                <KeyRound className="w-3 h-3 text-[#b47a3c] shrink-0" />
                 <span>Agent Login</span>
               </button>
             )}
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="w-10 h-10 flex items-center justify-center text-[#163a34] hover:bg-[#f0f4ef] rounded-xl transition-colors cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-[#163a34] hover:bg-[#f0f4ef] rounded-xl transition-colors cursor-pointer shrink-0"
               aria-label="Toggle navigation menu"
               aria-expanded={menuOpen}
             >
               {menuOpen ? (
-                <X className="w-6 h-6 stroke-[2]" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
               ) : (
                 <div className="w-5 flex flex-col gap-1 items-end">
                   <span className="w-5 h-[2px] bg-[#163a34] rounded-full" />
@@ -282,11 +266,39 @@ export default function Navbar({
 
       {/* Mobile Drawer Menu (Visible only when menuOpen on mobile) */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-b border-[#e1e9df] px-5 py-5 space-y-4 shadow-xl animate-in fade-in slide-in-from-top-3 duration-200">
-          <div className="space-y-1">
+        <div className="md:hidden bg-white border-b border-[#e1e9df] px-4 sm:px-5 py-4 sm:py-5 space-y-4 shadow-xl animate-in fade-in slide-in-from-top-3 duration-200 w-full">
+          <div className="space-y-1.5">
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#7c9388] mb-2">
               Samsher Properties Menu
             </p>
+
+            {/* Saved Residences / Wishlist inside Mobile Menu with Live Notification Badge */}
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                openWishlist();
+              }}
+              className="w-full text-left font-serif text-base text-[#163a34] hover:text-[#b47a3c] py-2.5 px-3 rounded-xl hover:bg-[#f7faf6] flex items-center justify-between cursor-pointer transition-colors bg-[#fbfdfa] border border-[#e8eee7] mb-2"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
+                  <Heart className={`w-4 h-4 ${wishlistCount > 0 ? 'fill-rose-500 text-rose-500' : 'text-[#567366]'}`} />
+                </div>
+                <div>
+                  <span className="font-semibold block text-sm sm:text-base">Saved Residences</span>
+                  <span className="text-[11px] text-[#6e8a7d] font-sans block">View your shortlisted properties</span>
+                </div>
+              </div>
+              <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
+                wishlistCount > 0 
+                  ? 'bg-rose-500 text-white border-rose-600 shadow-2xs' 
+                  : 'bg-[#eef3ed] text-[#1a4332] border-[#dae6d8]'
+              }`}>
+                {wishlistCount}
+              </span>
+            </button>
+
             <button
               onClick={() => {
                 onNavigateHome();
@@ -297,22 +309,6 @@ export default function Navbar({
               <span>Explore Curated Properties</span>
               <span className="text-xs bg-[#eef3ed] text-[#1a4332] font-semibold px-2 py-0.5 rounded-full">
                 Verified
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMenuOpen(false);
-                openWishlist();
-              }}
-              className="w-full text-left font-serif text-base text-[#163a34] hover:text-[#b47a3c] py-2 flex items-center justify-between cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Heart className={`w-4 h-4 ${wishlistCount > 0 ? 'text-rose-500 fill-rose-500' : 'text-[#567366]'}`} />
-                <span>Saved Residences (Wishlist)</span>
-              </div>
-              <span className="text-xs bg-rose-50 text-rose-700 font-bold px-2 py-0.5 rounded-full border border-rose-100">
-                {wishlistCount}
               </span>
             </button>
             <button
